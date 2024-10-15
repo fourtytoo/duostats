@@ -43,12 +43,16 @@
              :cookie-store cookie-jar}))
 
 (defn http-post [url data]
-  (http/get url
-            {:headers (http-headers)
-             :accept :json
-             :content-type :json
-             :body (json/generate-string data)
-             :cookie-store cookie-jar}))
+  (http/post url
+            (-> data
+                (update :headers merge (http-headers))
+                (assoc :accept :json)
+                (assoc :content-type :json)
+                (update :body (fn [body]
+                                (if (string? body)
+                                  body
+                                  (json/generate-string body))))
+                (assoc :cookie-store cookie-jar))))
 
 (defn make-jwt-cookie [value]
   (clj-http.cookies/to-basic-client-cookie ["jwt_token" {:value value}]))
@@ -60,15 +64,11 @@
   (add-jwt-cookie (jwt)))
 
 (defn login [username password]
-  (let [response (http/post duolingo-login-url
-                            {:body (json/encode {:login username
-                                                 :password password})
+  (let [response (http-post duolingo-login-url
+                            {:body {:login username
+                                    :password password}
                              :form-params {:login username
-                                           :password password}
-                             :content-type :json
-                             :accept :json
-                             :headers {"User-Agent" user-agent}
-                             :cookie-store cookie-jar})]
+                                           :password password}})]
     response
     
     #_(if (= 200 (:status response))
