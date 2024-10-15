@@ -1,0 +1,2 @@
+;; default configuration file for development and testing
+{:jwt "here your JWT token"}
