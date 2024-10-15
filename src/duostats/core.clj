@@ -225,7 +225,7 @@
   (print-progress-table (list-progress (load-data-points-from-db))))
 
 (defn -main [& args]
-  (let [{:keys [options arguments summary errors]} (parse-opts args)]
+  (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
     (cond errors
           (usage summary errors)
 
