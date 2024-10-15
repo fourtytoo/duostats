@@ -26,7 +26,6 @@
 
 (def configuration (delay (get-config)))
 
-;; TODO: should come from config file -wcp14/10/24
 (defn jwt []
   (:jwt @configuration))
 
