@@ -10,9 +10,6 @@
   (:import java.util.Base64))
 
 (def user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
-;; (def duolingo-login-url "https://www.duolingo.com/api/1/login")
-(def duolingo-login-url "https://www.duolingo.com//login")
-(def duolingo-user-url "https://www.duolingo.com/2017-06-30/users?username=")
 
 (def cookie-jar (clj-http.cookies/cookie-store))
 
@@ -62,18 +59,6 @@
 
 (comment
   (add-jwt-cookie (jwt)))
-
-(defn login [username password]
-  (let [response (http-post duolingo-login-url
-                            {:body {:login username
-                                    :password password}
-                             :form-params {:login username
-                                           :password password}})]
-    response
-    
-    #_(if (= 200 (:status response))
-      (get-in response [:body #_:jwt])
-      (throw (Exception. "Login failed")))))
 
 (defn get-version-info []
   (-> (http-get "https://www.duolingo.com/api/1/version_info")
